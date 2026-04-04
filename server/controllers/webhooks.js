@@ -1,5 +1,6 @@
 import Stripe from "stripe";
 import Transaction from "../models/transaction.js";
+import User from "../models/User.js";
 export const stripeWebhooks = async(request,response)=>{
 const stripe =new Stripe(process.env.STRIPE_SECRET_KEY)
 const sig= request.headers["stripe-signature"]
@@ -11,7 +12,7 @@ return response.status(400).send(`Webhook Error: ${error.message}`)
 }
 try{
 switch(event.type){
-    case "payment_intent.succeeded":{
+    case "checkout.session.completed":{
         const paymentIntent = event.data.object;
         const sessionList = await stripe.checkout.sessions.list({
             payment_intent:paymentIntent.id,
