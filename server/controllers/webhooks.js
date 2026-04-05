@@ -13,11 +13,12 @@ return response.status(400).send(`Webhook Error: ${error.message}`)
 try{
 switch(event.type){
     case "checkout.session.completed":{
-        const paymentIntent = event.data.object;
-        const sessionList = await stripe.checkout.sessions.list({
-            payment_intent:paymentIntent.id,
-        })
-        const session=sessionList.data[0];
+        // const paymentIntent = event.data.object;
+        // const sessionList = await stripe.checkout.sessions.list({
+        //     payment_intent:paymentIntent.id,
+        // })
+        // const session=sessionList.data[0];
+        const session = event.data.object;
         const {transactionId,appId}=session.metadata;
         if(appId === 'quickgpt'){
             const transaction =await Transaction.findOne({_id: transactionId,isPaid:false});
